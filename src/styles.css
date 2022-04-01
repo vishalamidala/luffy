@@ -1,0 +1,9 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+#babylon-canvas {
+  width: 86vw;
+  height: 80%;
+}

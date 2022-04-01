@@ -1,26 +1,71 @@
+import { Color3, Vector3 } from '@babylonjs/core';
+import { Box, Container } from '@mui/material';
+import '@babylonjs/loaders';
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import '@babylonjs/inspector';
+import { EngineSceneWithLightCamera } from './BabyLonLib/EngineSceneWithLightCamera';
+import { SpinningBox } from './BabyLonLib/SpinningBox';
+import ResponsiveAppBar from './MuiLib/AppBar';
+import { ModelAvacadoAndBoomBoxModel } from './BabyLonLib/ModelAvacadoAndBoomBox';
+import { ModelAnimeGirl } from './BabyLonLib/ModelAnimeGirl';
+import { Model } from 'react-babylonjs';
 
-function App() {
+const baseUrl =
+  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/';
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="xl" disableGutters>
+      <ResponsiveAppBar />
+      <Box
+        component={'div'}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <EngineSceneWithLightCamera>
+          <React.Suspense
+            fallback={
+              <SpinningBox
+                name="right"
+                positionX={0}
+                positionZ={0}
+                color={Color3.FromHexString('#C8F4F9')}
+                hoveredColor={Color3.FromHexString('#3CACAE')}
+              />
+            }
+          >
+            <ModelAvacadoAndBoomBoxModel />
+          </React.Suspense>
+          <SpinningBox
+            name="right"
+            positionX={-4}
+            positionZ={4}
+            color={Color3.FromHexString('#C8F4F9')}
+            hoveredColor={Color3.FromHexString('#3CACAE')}
+          />
+          <SpinningBox
+            name="right"
+            positionX={4}
+            positionZ={-4}
+            color={Color3.FromHexString('#C8F4F9')}
+            hoveredColor={Color3.FromHexString('#3CACAE')}
+          />
+          <SpinningBox
+            name="right"
+            positionX={4}
+            positionZ={4}
+            color={Color3.FromHexString('#C8F4F9')}
+            hoveredColor={Color3.FromHexString('#3CACAE')}
+          />
+          <SpinningBox
+            name="right"
+            positionX={-4}
+            positionZ={-4}
+            color={Color3.FromHexString('#C8F4F9')}
+            hoveredColor={Color3.FromHexString('#3CACAE')}
+          />
+        </EngineSceneWithLightCamera>
+      </Box>
+    </Container>
   );
 }
-
-export default App;
