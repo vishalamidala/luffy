@@ -2,8 +2,14 @@ import { Vector3 } from '@babylonjs/core';
 import React from 'react';
 import { TaskType, useAssetManager } from 'react-babylonjs';
 
+const gg =
+  'https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/AnimatedCube';
 const baseUrl =
   'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/';
+const baseUrl2 =
+  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/';
+const baseUrl3 =
+  'https://raw.githubusercontent.com/vishalamidala/luffy/main/public/models/';
 
 const modelAssetTasks = [
   {
@@ -14,8 +20,8 @@ const modelAssetTasks = [
   },
   {
     taskType: TaskType.Mesh,
-    rootUrl: `${baseUrl}Avocado/glTF/`,
-    sceneFilename: 'Avocado.gltf',
+    rootUrl: `${baseUrl3}`,
+    sceneFilename: 'avocado.gltf',
     name: 'avocado',
   },
 ] as any;
