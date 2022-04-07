@@ -1,13 +1,7 @@
 import '../styles.css';
 
 import React, { useRef, useState } from 'react';
-import {
-  Engine,
-  Scene,
-  useBeforeRender,
-  useClick,
-  useHover,
-} from 'react-babylonjs';
+import { useBeforeRender, useClick, useHover } from 'react-babylonjs';
 
 import { Mesh } from '@babylonjs/core/Meshes/mesh';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
@@ -22,15 +16,15 @@ type SpinningBoxProps = {
   positionZ?: number;
   hoveredColor: Color3;
   color: Color3;
+  onClick: () => void;
+  clicked: boolean;
 };
 
 export const SpinningBox = (props: SpinningBoxProps) => {
   // access Babylon scene objects with same React hook as regular DOM elements
   const boxRef = useRef<Mesh>(null);
 
-  const [clicked, setClicked] = useState(false);
-  useClick(() => setClicked((clicked) => !clicked), boxRef);
-
+  useClick(() => props.onClick(), boxRef);
   const [hovered, setHovered] = useState(false);
   useHover(
     () => setHovered(true),
@@ -55,9 +49,9 @@ export const SpinningBox = (props: SpinningBoxProps) => {
       ref={boxRef}
       size={1}
       position={
-        new Vector3(props.positionX, clicked ? 2.5 : 0.5, props.positionZ)
+        new Vector3(props.positionX, props.clicked ? 2.5 : 0.5, props.positionZ)
       }
-      scaling={clicked ? BiggerScale : DefaultScale}
+      scaling={props.clicked ? BiggerScale : DefaultScale}
     >
       <standardMaterial
         name={`${props.name}-mat`}
@@ -67,40 +61,3 @@ export const SpinningBox = (props: SpinningBoxProps) => {
     </box>
   );
 };
-
-// export const SceneWithSpinningBoxes = () => (
-//   <Engine antialias adaptToDeviceRatio canvasId="babylon-canvas">
-//     <Scene>
-//       <arcRotateCamera
-//         name="camera1"
-//         target={Vector3.Zero()}
-//         alpha={Math.PI / 2}
-//         beta={Math.PI / 4}
-//         radius={8}
-//       />
-//       <hemisphericLight
-//         name="light1"
-//         intensity={0.7}
-//         direction={Vector3.Up()}
-//       />
-//       <SpinningBox
-//         name="left"
-//         position={new Vector3(-4, 0, 0)}
-//         color={Color3.FromHexString('#EEB5EB')}
-//         hoveredColor={Color3.FromHexString('#C26DBC')}
-//       />
-//       <SpinningBox
-//         name="right"
-//         position={new Vector3(0, 0, 0)}
-//         color={Color3.FromHexString('#C8F4F9')}
-//         hoveredColor={Color3.FromHexString('#3CACAE')}
-//       />
-//       <SpinningBox
-//         name="right"
-//         position={new Vector3(4, 0, 0)}
-//         color={Color3.FromHexString('#C8F4F9')}
-//         hoveredColor={Color3.FromHexString('#3CACAE')}
-//       />
-//     </Scene>
-//   </Engine>
-// );

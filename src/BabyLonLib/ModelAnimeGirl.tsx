@@ -1,72 +1,141 @@
-import { AssetsManager, Vector3 } from '@babylonjs/core';
+import { Vector3 } from '@babylonjs/core';
 import React from 'react';
-import {
-  TaskType,
-  useAssetManager,
-  useCamera,
-  useScene,
-  useSceneLoader,
-} from 'react-babylonjs';
-import '@babylonjs/loaders/glTF';
+import { TaskType, useAssetManager } from 'react-babylonjs';
 
+const lala =
+  'https://github.com/vishalamidala/luffy/tree/main/src/BabyLonLib/Models';
+const gg =
+  'https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/AnimatedCube';
 const baseUrl =
   'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/';
+const baseUrl2 =
+  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/';
+const baseUrl3 =
+  'https://raw.githubusercontent.com/vishalamidala/luffy/main/src/BabyLonLib/Models/';
 
 const modelAssetTasks = [
   {
     taskType: TaskType.Mesh,
-    rootUrl: `${baseUrl}Avocado/glTF/`,
-    sceneFilename: 'Avocado.gltf',
-    name: 'avocado',
+    rootUrl: `${baseUrl3}`,
+    sceneFilename: 'animegirl.glb',
+    name: 'animegirl',
   },
 ] as any;
 
-export const ModelAnimeGirl = () => {
+export const ModelAnimeGirl = (props: {
+  animationName?:
+    | 'idle'
+    | 'arms_hip_hp_dance'
+    | 'break_dance'
+    | 'kick'
+    | 'walking'
+    | 'walking_turn_180'
+    | 'stop';
+}) => {
   const assetManagerResult = useAssetManager(modelAssetTasks);
-  const scene: any = useScene();
-  const loader = useSceneLoader('./Models/', 'animegirl.glb');
 
-  //   const loadModels = () => {
-  //     let loader = new AssetsManager(scene);
-  //     let loadModel = loader.addMeshTask('test', '', '', 'model.babylon');
-  //     loadModel.onSuccess = (t) => {
-  //       // do some code
-  //       // .....
-  //     };
-  //     return loader;
-  //   };
-  //   const load = BABYLON.SceneLoader.ImportMesh(
-  //     '',
-  //     'https://assets.babylonjs.com/meshes/',
-  //     'HVGirl.glb',
-  //     scene,
-  //     function (newMeshes, particleSystems, skeletons, animationGroups) {
-  //       var hero = newMeshes[0];
+  React.useEffect(() => {
+    const loadAsset = () => {
+      const animegirlTask: any = assetManagerResult.taskNameMap['animegirl'];
+      animegirlTask.loadedMeshes[0].position = new Vector3(0, 0, 0);
+      animegirlTask.loadedMeshes[0].scaling = new Vector3(0.8, 0.8, 0.8);
+      console.log(props.animationName);
+      const idleAnimation = animegirlTask.loadedAnimationGroups.filter(
+        (animations: any) => animations.name.includes('idle')
+      )[0];
+      const armsAnimation = animegirlTask.loadedAnimationGroups.filter(
+        (animations: any) => animations.name.includes('arms_hip_hp_dance')
+      )[0];
+      const breakAnimation = animegirlTask.loadedAnimationGroups.filter(
+        (animations: any) => animations.name.includes('break_dance')
+      )[0];
+      const kickAnimation = animegirlTask.loadedAnimationGroups.filter(
+        (animations: any) => animations.name.includes('kick')
+      )[0];
+      const walkingAnimation = animegirlTask.loadedAnimationGroups.filter(
+        (animations: any) => animations.name.includes('walking')
+      )[0];
+      const walkingTurnAnimation = animegirlTask.loadedAnimationGroups.filter(
+        (animations: any) => animations.name.includes('walking_turn_180')
+      )[0];
+      if (props.animationName === 'idle') {
+        kickAnimation.stop();
+        armsAnimation.stop();
+        idleAnimation.start(
+          true,
+          1.0,
+          idleAnimation.from,
+          idleAnimation.to,
+          false
+        );
+      }
+      if (props.animationName === 'arms_hip_hp_dance')
+        armsAnimation.start(
+          true,
+          1.0,
+          armsAnimation.from,
+          armsAnimation.to,
+          false
+        );
+      if (props.animationName === 'kick') {
+        idleAnimation.stop();
+        armsAnimation.stop();
+        kickAnimation.start(
+          true,
+          1.0,
+          kickAnimation.from,
+          kickAnimation.to,
+          false
+        );
+      }
+      if (props.animationName === 'walking') {
+        idleAnimation.stop();
+        armsAnimation.stop();
+        kickAnimation.stop();
+        walkingAnimation.start(
+          true,
+          1.0,
+          walkingAnimation.from,
+          walkingAnimation.to,
+          false
+        );
+      }
+      if (props.animationName === 'walking_turn_180') {
+        idleAnimation.stop();
+        armsAnimation.stop();
+        kickAnimation.stop();
+        walkingTurnAnimation.start(
+          true,
+          1.0,
+          walkingTurnAnimation.from,
+          walkingTurnAnimation.to,
+          false
+        );
+      }
+      if (props.animationName === 'break_dance') {
+        idleAnimation.stop();
+        armsAnimation.stop();
+        kickAnimation.stop();
+        breakAnimation.start(
+          true,
+          1.0,
+          breakAnimation.from,
+          breakAnimation.to,
+          false
+        );
+      }
+      if (props.animationName === 'stop') {
+        idleAnimation.stop();
+        armsAnimation.stop();
+        kickAnimation.stop();
+        walkingAnimation.stop();
+        walkingTurnAnimation.stop();
+        breakAnimation.stop();
+      }
+    };
 
-  //       //Scale the model down
-  //       hero.scaling.scaleInPlace(0.1);
-
-  //       //Lock camera on the character
-  //       camera1.target = hero;
-
-  //       //Get the Samba animation Group
-  //       const sambaAnim = scene.getAnimationGroupByName('Samba');
-
-  //       //Play the Samba animation
-  //       sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
-  //     }
-  //   );
-  React.useMemo(() => {
-    console.log('Loaded Tasks', loader);
-
-    // const boomboxTask: any = assetManagerResult.taskNameMap['animegirl'];
-    // boomboxTask.loadedMeshes[0].position = new Vector3(2.5, 0.7, 0);
-    // boomboxTask.loadedMeshes[1].scaling = new Vector3(80, 80, 80);
-
-    const avocadoTask: any = assetManagerResult.taskNameMap['avocado'];
-    avocadoTask.loadedMeshes[0].position = new Vector3(-2.5, 0, 0);
-    avocadoTask.loadedMeshes[1].scaling = new Vector3(20, 20, 20);
-  }, [assetManagerResult]);
+    assetManagerResult && loadAsset();
+  }, [assetManagerResult, props.animationName]);
 
   return null;
 };
