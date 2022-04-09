@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Vector3, PhysicsImpostor, Color3 } from '@babylonjs/core';
 import { Engine, Model, Scene } from 'react-babylonjs';
 import '../styles.css';
+import { XrExperience } from './XrExperience';
 
 declare global {
   namespace JSX {
@@ -69,14 +70,15 @@ export const EngineSceneWithLightCamera = (props: { children: any }) => {
             _options={{ mass: 0, restitution: 0.9 }}
           />
         </ground>
-        <vrExperienceHelper
+        <XrExperience />
+        {/* <vrExperienceHelper
           webVROptions={{
             createDeviceOrientationCamera: false,
             useXR: true,
             controllerMeshes: false,
           }}
           enableInteractions
-        />
+        /> */}
         {/* Base experience  baseExperience: WebXRExperienceHelper; /** *
         Enables ui for entering/exiting xr  enterExitUI: WebXREnterExitUI; /**
         * Input experience extension  input: WebXRInput; /** * Enables laser
@@ -84,14 +86,14 @@ export const EngineSceneWithLightCamera = (props: { children: any }) => {
         WebXRControllerPointerSelection; /** * Default target xr should render
         to  renderTarget: WebXRRenderTarget; /** * Enables teleportation 
         teleportation: WebXRMotionControllerTeleportation */}
-        <vrExperienceHelper
+        {/* <vrExperienceHelper
           webVROptions={{
             createDeviceOrientationCamera: false,
             useXR: true, // This will enable XR if supported
             controllerMeshes: false,
           }}
           enableInteractions
-        />
+        /> */}
         <environmentHelper
           options={{
             enableGroundShadow: true /* true by default */,
@@ -102,8 +104,4 @@ export const EngineSceneWithLightCamera = (props: { children: any }) => {
       </Scene>
     </Engine>
   );
-};
-
-const VrExperienceHelper = (props: any) => {
-  return <vrExperienceHelper {...props} />;
 };
