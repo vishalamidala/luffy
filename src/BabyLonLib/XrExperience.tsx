@@ -6,18 +6,11 @@ export const XrExperience = () => {
 
   React.useEffect(() => {
     const xrExperience = async () => {
-      scene?.createDefaultEnvironment();
-      const xr = await scene?.createDefaultXRExperienceAsync({
+      await scene?.createDefaultXRExperienceAsync({
         uiOptions: {
           sessionMode: 'immersive-vr',
         },
       });
-      if (!xr?.baseExperience) {
-        console.log('gg');
-      } else {
-        console.log('wp');
-      }
-      console.log(xr);
     };
     xrExperience();
   });
