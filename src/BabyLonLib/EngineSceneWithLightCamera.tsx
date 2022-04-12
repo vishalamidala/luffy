@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Color3, Vector3 } from '@babylonjs/core';
-import { Engine, Scene, StandardMaterial } from 'react-babylonjs';
+import { Engine, Scene, Skybox } from 'react-babylonjs';
 import '../styles.css';
 import { XrExperience } from './XrExperience';
-import grass from '../MuiLib/wood_floor.jpg';
+import wood from '../MuiLib/wood_floor.jpg';
 
 declare global {
   namespace JSX {
@@ -18,7 +18,7 @@ declare global {
 
 export const EngineSceneWithLightCamera = (props: { children: any }) => {
   return (
-    <Engine antialias canvasId="babylon-canvas">
+    <Engine antialias adaptToDeviceRatio canvasId="babylon-canvas">
       <Scene enablePhysics={true}>
         <arcRotateCamera
           name="arc"
@@ -28,13 +28,13 @@ export const EngineSceneWithLightCamera = (props: { children: any }) => {
           radius={8}
           minZ={0.001}
           wheelPrecision={50}
-          lowerRadiusLimit={12}
+          lowerRadiusLimit={11}
           upperRadiusLimit={20}
           upperBetaLimit={Math.PI / 2}
         />
         <hemisphericLight
           name="hemi"
-          direction={new Vector3(1, 1, 0)}
+          direction={new Vector3(1, 1, 1)}
           intensity={0.8}
         />
         <directionalLight
@@ -59,15 +59,25 @@ export const EngineSceneWithLightCamera = (props: { children: any }) => {
         {props.children}
         <ground
           name="ground1"
-          width={50}
-          height={50}
+          width={100}
+          height={100}
           subdivisions={2}
           receiveShadows={true}
         >
-          <standardMaterial name="groundMat">
-            <texture name="grass" url={grass} />
+          <standardMaterial name="groundMat" diffuseColor={new Color3(6, 1, 1)}>
+            <texture name="grass" url={wood} />
           </standardMaterial>
         </ground>
+        <Skybox
+          rootUrl="assets/textures/TropicalSunnyDay"
+          name="skybox"
+        ></Skybox>
+        <environmentHelper
+          options={{
+            enableGroundShadow: true /* true by default */,
+            groundYBias: 1,
+          }}
+        />
         <XrExperience />
       </Scene>
     </Engine>

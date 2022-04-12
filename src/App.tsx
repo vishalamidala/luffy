@@ -1,14 +1,11 @@
-import { Color3, Vector3 } from '@babylonjs/core';
+import { Color3 } from '@babylonjs/core';
 import { Box, Container } from '@mui/material';
 import '@babylonjs/loaders/glTF';
 import React from 'react';
 import '@babylonjs/inspector';
 import { EngineSceneWithLightCamera } from './BabyLonLib/EngineSceneWithLightCamera';
 import { SpinningBox } from './BabyLonLib/SpinningBox';
-import ResponsiveAppBar from './MuiLib/AppBar';
-import { ModelAvacadoAndBoomBoxModel } from './BabyLonLib/ModelAvacadoAndBoomBox';
 import { ModelAnimeGirl } from './BabyLonLib/ModelAnimeGirl';
-import { SimpleVR } from './BabyLonLib/vr';
 
 export default function App() {
   const [clicked, setClicked] = React.useState(false);
@@ -25,7 +22,13 @@ export default function App() {
     'walking_turn_180',
   ] as const;
   const [currentAnimationName, setCurrentAnimationName] = React.useState<
-    'stop' | 'idle' | 'arms_hip_hp_dance' | 'break_dance' | 'kick' | 'walking'
+    | 'stop'
+    | 'idle'
+    | 'arms_hip_hp_dance'
+    | 'break_dance'
+    | 'kick'
+    | 'walking'
+    | 'walking_turn_180'
   >(boxClickAnimationNames[0]);
 
   const handleBox1Click = () => {
@@ -102,7 +105,6 @@ export default function App() {
 
   return (
     <Container maxWidth="xl" disableGutters>
-      <ResponsiveAppBar />
       <Box
         component={'div'}
         display="flex"
