@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Vector3, PhysicsImpostor, Color3 } from '@babylonjs/core';
-import { Engine, Model, Scene } from 'react-babylonjs';
+import { Color3, Vector3 } from '@babylonjs/core';
+import { Engine, Scene, StandardMaterial } from 'react-babylonjs';
 import '../styles.css';
 import { XrExperience } from './XrExperience';
+import grass from '../MuiLib/wood_floor.jpg';
 
 declare global {
   namespace JSX {
@@ -15,11 +16,9 @@ declare global {
   }
 }
 
-let baseUrl =
-  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/';
 export const EngineSceneWithLightCamera = (props: { children: any }) => {
   return (
-    <Engine antialias adaptToDeviceRatio canvasId="babylon-canvas">
+    <Engine antialias canvasId="babylon-canvas">
       <Scene enablePhysics={true}>
         <arcRotateCamera
           name="arc"
@@ -29,13 +28,13 @@ export const EngineSceneWithLightCamera = (props: { children: any }) => {
           radius={8}
           minZ={0.001}
           wheelPrecision={50}
-          lowerRadiusLimit={8}
+          lowerRadiusLimit={12}
           upperRadiusLimit={20}
           upperBetaLimit={Math.PI / 2}
         />
         <hemisphericLight
           name="hemi"
-          direction={new Vector3(0, -1, 0)}
+          direction={new Vector3(1, 1, 0)}
           intensity={0.8}
         />
         <directionalLight
@@ -60,47 +59,16 @@ export const EngineSceneWithLightCamera = (props: { children: any }) => {
         {props.children}
         <ground
           name="ground1"
-          width={10}
-          height={10}
+          width={50}
+          height={50}
           subdivisions={2}
           receiveShadows={true}
         >
-          <physicsImpostor
-            type={PhysicsImpostor.BoxImpostor}
-            _options={{ mass: 0, restitution: 0.9 }}
-          />
+          <standardMaterial name="groundMat">
+            <texture name="grass" url={grass} />
+          </standardMaterial>
         </ground>
         <XrExperience />
-        {/* <vrExperienceHelper
-          webVROptions={{
-            createDeviceOrientationCamera: false,
-            useXR: true,
-            controllerMeshes: false,
-          }}
-          enableInteractions
-        /> */}
-        {/* Base experience  baseExperience: WebXRExperienceHelper; /** *
-        Enables ui for entering/exiting xr  enterExitUI: WebXREnterExitUI; /**
-        * Input experience extension  input: WebXRInput; /** * Enables laser
-        pointer and selection  pointerSelection:
-        WebXRControllerPointerSelection; /** * Default target xr should render
-        to  renderTarget: WebXRRenderTarget; /** * Enables teleportation 
-        teleportation: WebXRMotionControllerTeleportation */}
-        {/* <vrExperienceHelper
-          webVROptions={{
-            createDeviceOrientationCamera: false,
-            useXR: true, // This will enable XR if supported
-            controllerMeshes: false,
-          }}
-          enableInteractions
-        /> */}
-        <environmentHelper
-          options={{
-            enableGroundShadow: true /* true by default */,
-            groundYBias: 1,
-          }}
-          setMainColor={[Color3.FromHexString('#74b9ff')]}
-        />
       </Scene>
     </Engine>
   );

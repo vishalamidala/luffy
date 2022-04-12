@@ -2,8 +2,7 @@ import React from 'react';
 import { useScene } from 'react-babylonjs';
 
 export const XrExperience = () => {
-  let scene = useScene();
-
+  const scene = useScene();
   React.useEffect(() => {
     const xrExperience = async () => {
       await scene?.createDefaultXRExperienceAsync({
