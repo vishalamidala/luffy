@@ -101,6 +101,10 @@ export default function App() {
       }
     };
     animationName();
+    const values = ['5'];
+
+    const callPints = (values: string[]) => {};
+    console.log(callPints(values));
   }, [clicked, box1clicked, box2clicked, box3clicked, box4clicked]);
 
   return (

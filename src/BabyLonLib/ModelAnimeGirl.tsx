@@ -1,15 +1,7 @@
-import { Vector3 } from '@babylonjs/core';
+import { Vector3, ActionManager, ExecuteCodeAction } from '@babylonjs/core';
 import React from 'react';
-import { TaskType, useAssetManager } from 'react-babylonjs';
+import { TaskType, useAssetManager, useScene } from 'react-babylonjs';
 
-const lala =
-  'https://github.com/vishalamidala/luffy/tree/main/src/BabyLonLib/Models';
-const gg =
-  'https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/AnimatedCube';
-const baseUrl =
-  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/';
-const baseUrl2 =
-  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/';
 const baseUrl3 =
   'https://raw.githubusercontent.com/vishalamidala/luffy/main/src/BabyLonLib/Models/';
 
@@ -33,13 +25,28 @@ export const ModelAnimeGirl = (props: {
     | 'stop';
 }) => {
   const assetManagerResult = useAssetManager(modelAssetTasks);
+  const scene = useScene();
 
   React.useEffect(() => {
     const loadAsset = () => {
       const animegirlTask: any = assetManagerResult.taskNameMap['animegirl'];
+      const animegirl = animegirlTask.loadedMeshes[0];
+      animegirl.scaling = new Vector3(0.8, 0.8, 0.8);
       animegirlTask.loadedMeshes[0].position = new Vector3(0, 0, 0);
-      animegirlTask.loadedMeshes[0].scaling = new Vector3(0.8, 0.8, 0.8);
-      console.log(props.animationName);
+      const heroSpeed = 0.04;
+      const heroSpeedBackwards = 0.01;
+      const heroRotationSpeed = 0.1;
+      let animating = true;
+      //   animegirlTask.loadedMeshes[0].scaling = new Vector3(0.8, 0.8, 0.8);
+
+      // console.log(
+      //   'girl',
+      //   animegirl.moveWithCollisions(animegirl.forward.scaleInPlace(heroSpeed))
+      // );
+      // animegirl.rotate(Vector3.Up(), -heroRotationSpeed);
+      // const camera: any = scene?.activeCamera;
+      // camera.setTarget(animegirlTask.loadedMeshes[0].position);
+
       const idleAnimation = animegirlTask.loadedAnimationGroups.filter(
         (animations: any) => animations.name.includes('idle')
       )[0];
@@ -132,10 +139,72 @@ export const ModelAnimeGirl = (props: {
         walkingTurnAnimation.stop();
         breakAnimation.stop();
       }
+
+      // keydown events excuted every frame
+      if (scene) {
+        const walk = scene.getAnimationGroupByName('walking');
+        let inputMap = {} as any;
+        scene.actionManager = new ActionManager(scene);
+        scene.actionManager.registerAction(
+          new ExecuteCodeAction(ActionManager.OnKeyDownTrigger, (evt) => {
+            inputMap[evt.sourceEvent.key] = evt.sourceEvent.type === 'keydown';
+          })
+        );
+        scene.actionManager.registerAction(
+          new ExecuteCodeAction(ActionManager.OnKeyUpTrigger, (evt) => {
+            inputMap[evt.sourceEvent.key] = evt.sourceEvent.type === 'keydown';
+          })
+        );
+        scene.onBeforeRenderObservable.add(() => {
+          let keydown = false;
+          if (inputMap['w']) {
+            animegirl.moveWithCollisions(
+              animegirl.forward.scaleInPlace(heroSpeed)
+            );
+            keydown = true;
+          }
+          if (inputMap['a']) {
+            animegirl.rotate(Vector3.Up(), -heroRotationSpeed);
+            keydown = true;
+          }
+          if (inputMap['d']) {
+            animegirl.rotate(Vector3.Up(), heroRotationSpeed);
+            keydown = true;
+          }
+
+          if (keydown) {
+            if (!animating) {
+              animating = true;
+              walk?.start(true, 2, walk.from, walk.to, false);
+            }
+          } else {
+            if (animating) {
+              //Default animation is idle when no key is down
+              idleAnimation.start(
+                true,
+                1.0,
+                idleAnimation.from,
+                idleAnimation.to,
+                true
+              );
+
+              //Stop all animations besides Idle Anim when no key is down
+              armsAnimation.stop();
+              kickAnimation.stop();
+              walkingAnimation.stop();
+              walkingTurnAnimation.stop();
+              breakAnimation.stop();
+
+              //Ensure animation are played only once per rendering loop
+              animating = false;
+            }
+          }
+        });
+      }
     };
 
     assetManagerResult && loadAsset();
-  }, [assetManagerResult, props.animationName]);
+  }, [assetManagerResult, props.animationName, scene]);
 
   return null;
 };
