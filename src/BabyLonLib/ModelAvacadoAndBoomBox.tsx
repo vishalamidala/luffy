@@ -37,7 +37,7 @@ export const ModelAvacadoAndBoomBoxModel = (props: {
       const animegirlTask: any = assetManagerResult.taskNameMap['animegirl'];
       animegirlTask.loadedMeshes[0].position = new Vector3(0, 0, 0);
       animegirlTask.loadedMeshes[0].scaling = new Vector3(0.8, 0.8, 0.8);
-      console.log(props.animationName);
+
       const idleAnimation = animegirlTask.loadedAnimationGroups.filter(
         (animations: any) => animations.name.includes('idle')
       )[0];

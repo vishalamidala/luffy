@@ -33,16 +33,9 @@ export const ModelAnimeGirl = (props: {
       const animegirl = animegirlTask.loadedMeshes[0];
       animegirl.scaling = new Vector3(0.1, 0.1, 0.1);
       animegirlTask.loadedMeshes[0].position = new Vector3(0, 0, 0);
-      const heroSpeed = 0.04;
-      const heroSpeedBackwards = 0.01;
-      const heroRotationSpeed = 0.1;
-      let animating = true;
+
       //   animegirlTask.loadedMeshes[0].scaling = new Vector3(0.8, 0.8, 0.8);
 
-      // console.log(
-      //   'girl',
-      //   animegirl.moveWithCollisions(animegirl.forward.scaleInPlace(heroSpeed))
-      // );
       // animegirl.rotate(Vector3.Up(), -heroRotationSpeed);
       // const camera: any = scene?.activeCamera;
       // camera.setTarget(animegirlTask.loadedMeshes[0].position);
@@ -142,7 +135,10 @@ export const ModelAnimeGirl = (props: {
 
       // keydown events excuted every frame
       if (scene) {
-        console.log();
+        const heroSpeed = 0.04;
+        const heroSpeedBackwards = 0.01;
+        const heroRotationSpeed = 0.1;
+        let animating = true;
         const walk = scene.getAnimationGroupByName('Walking');
         const walkBackAnim = scene.getAnimationGroupByName('WalkingBack');
         const idleAnim = scene.getAnimationGroupByName('Idle');

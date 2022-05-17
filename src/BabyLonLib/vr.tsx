@@ -71,7 +71,6 @@ const WithVR = (props: any) => {
   const { showIcoSpheres } = props;
   const xr = (e: any) => {
     e.xr as WebXRDefaultExperience;
-    console.log(e.xr);
   };
   let baseUrl =
     'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/';

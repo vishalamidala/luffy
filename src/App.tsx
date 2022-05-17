@@ -5,107 +5,94 @@ import React from 'react';
 import '@babylonjs/inspector';
 import { EngineSceneWithLightCamera } from './BabyLonLib/EngineSceneWithLightCamera';
 import { SpinningBox } from './BabyLonLib/SpinningBox';
-import { ModelAnimeGirl } from './BabyLonLib/ModelAnimeGirl';
+import { ModelSkaterGuy } from './BabyLonLib/ModelSkaterGuy';
+import * as socket from 'socket.io-client';
+import { useScene } from 'react-babylonjs';
+export const io = socket.connect('http://localhost:5020');
+const KEY = '1';
 
 export default function App() {
   const [clicked, setClicked] = React.useState(false);
-  const [box1clicked, setBox1Clicked] = React.useState(false);
-  const [box2clicked, setBox2Clicked] = React.useState(false);
-  const [box3clicked, setBox3Clicked] = React.useState(false);
-  const [box4clicked, setBox4Clicked] = React.useState(false);
-  const boxClickAnimationNames = [
-    'stop',
-    'arms_hip_hp_dance',
-    'break_dance',
-    'kick',
-    'walking',
-    'walking_turn_180',
-  ] as const;
-  const [currentAnimationName, setCurrentAnimationName] = React.useState<
-    | 'stop'
-    | 'idle'
-    | 'arms_hip_hp_dance'
-    | 'break_dance'
-    | 'kick'
-    | 'walking'
-    | 'walking_turn_180'
-  >(boxClickAnimationNames[0]);
 
-  const handleBox1Click = () => {
-    setBox1Clicked((prevState) => {
-      if (prevState === true) {
-        setCurrentAnimationName('stop');
-      } else {
-        setCurrentAnimationName(boxClickAnimationNames[1]);
-      }
-      return !prevState;
-    });
-    setBox2Clicked(false);
-    setBox3Clicked(false);
-    setBox4Clicked(false);
-  };
-  const handleBox2Click = () => {
-    setBox1Clicked(false);
-    setBox2Clicked((prevState) => {
-      if (prevState === true) {
-        setCurrentAnimationName('stop');
-      } else {
-        setCurrentAnimationName(boxClickAnimationNames[2]);
-      }
-      return !prevState;
-    });
-    setBox3Clicked(false);
-    setBox4Clicked(false);
-  };
-  const handleBox3Click = () => {
-    setBox1Clicked(false);
-    setBox2Clicked(false);
-    setBox3Clicked((prevState) => {
-      if (prevState === true) {
-        setCurrentAnimationName('stop');
-      } else {
-        setCurrentAnimationName(boxClickAnimationNames[3]);
-      }
-      return !prevState;
-    });
-    setBox4Clicked(false);
-  };
-  const handleBox4Click = () => {
-    setBox1Clicked(false);
-    setBox2Clicked(false);
-    setBox3Clicked(false);
+  const scene = useScene();
 
-    setBox4Clicked((prevState) => {
-      if (prevState === true) {
-        setCurrentAnimationName('stop');
-      } else {
-        setCurrentAnimationName(boxClickAnimationNames[4]);
-      }
-      return !prevState;
-    });
-  };
+  // const handleBox1Click = () => {
+  //   console.log('added');
+
+  //   io.emit('message', {
+  //     text: 'Test',
+  //     date: new Date(),
+  //     key: KEY,
+  //   });
+  // };
+  // const handleBox2Click = () => {
+  //   setBox1Clicked(false);
+  //   setBox2Clicked((prevState) => {
+  //     if (prevState === true) {
+  //       setCurrentAnimationName('stop');
+  //     } else {
+  //       setCurrentAnimationName(boxClickAnimationNames[2]);
+  //     }
+  //     return !prevState;
+  //   });
+  //   setBox3Clicked(false);
+  //   setBox4Clicked(false);
+  // };
+  // const handleBox3Click = () => {
+  //   setBox1Clicked(false);
+  //   setBox2Clicked(false);
+  //   setBox3Clicked((prevState) => {
+  //     if (prevState === true) {
+  //       setCurrentAnimationName('stop');
+  //     } else {
+  //       setCurrentAnimationName(boxClickAnimationNames[3]);
+  //     }
+  //     return !prevState;
+  //   });
+  //   setBox4Clicked(false);
+  // };
+  // const handleBox4Click = () => {
+  //   setBox1Clicked(false);
+  //   setBox2Clicked(false);
+  //   setBox3Clicked(false);
+
+  //   setBox4Clicked((prevState) => {
+  //     if (prevState === true) {
+  //       setCurrentAnimationName('stop');
+  //     } else {
+  //       setCurrentAnimationName(boxClickAnimationNames[4]);
+  //     }
+  //     return !prevState;
+  //   });
+  // };
+  // React.useEffect(() => {
+  //   const animationName = () => {
+  //     if (clicked) {
+  //       return 'idle';
+  //     } else if (box1clicked) {
+  //       return 'arms_hip_hp_dance';
+  //     } else if (box2clicked) {
+  //       return 'break_dance';
+  //     } else if (box3clicked) {
+  //       return 'kick';
+  //     } else if (box4clicked) {
+  //       return 'walking';
+  //     } else {
+  //       return 'stop';
+  //     }
+  //   };
+  //   animationName();
+  //   const values = ['5'];
+
+  //   const callPints = (values: string[]) => {};
+  // }, [clicked, box1clicked, box2clicked, box3clicked, box4clicked]);
+
   React.useEffect(() => {
-    const animationName = () => {
-      if (clicked) {
-        return 'idle';
-      } else if (box1clicked) {
-        return 'arms_hip_hp_dance';
-      } else if (box2clicked) {
-        return 'break_dance';
-      } else if (box3clicked) {
-        return 'kick';
-      } else if (box4clicked) {
-        return 'walking';
-      } else {
-        return 'stop';
-      }
-    };
-    animationName();
-    const values = ['5'];
-
-    const callPints = (values: string[]) => {};
-    console.log(callPints(values));
-  }, [clicked, box1clicked, box2clicked, box3clicked, box4clicked]);
+    io.emit('joinRoom', KEY);
+    if (scene) {
+      console.log(scene);
+    }
+  }, [scene]);
 
   return (
     <Container maxWidth="xl" disableGutters>
@@ -121,7 +108,7 @@ export default function App() {
             fallback={
               <SpinningBox
                 name="right"
-                positionX={0}
+                positionX={1}
                 positionZ={0}
                 color={Color3.FromHexString('#C8F4F9')}
                 hoveredColor={Color3.FromHexString('#3CACAE')}
@@ -130,9 +117,16 @@ export default function App() {
               />
             }
           >
-            <ModelAnimeGirl animationName={currentAnimationName} />
+            <ModelSkaterGuy
+              positionX={1}
+              positionZ={0}
+              positionY={0}
+              scaleX={0.5}
+              scaleY={0.5}
+              scaleZ={0.5}
+            />
           </React.Suspense>
-          <SpinningBox
+          {/* <SpinningBox
             name="right"
             positionX={-4}
             positionZ={4}
@@ -140,8 +134,8 @@ export default function App() {
             hoveredColor={Color3.FromHexString('#3CACAE')}
             clicked={box1clicked}
             onClick={handleBox1Click}
-          />
-          <SpinningBox
+          /> */}
+          {/* <SpinningBox
             name="right"
             positionX={4}
             positionZ={-4}
@@ -158,16 +152,16 @@ export default function App() {
             hoveredColor={Color3.FromHexString('#3CACAE')}
             clicked={box3clicked}
             onClick={handleBox3Click}
-          />
-          <SpinningBox
+          /> */}
+          {/* <SpinningBox
             name="right"
             positionX={-4}
             positionZ={-4}
             color={Color3.FromHexString('#C8F4F9')}
             hoveredColor={Color3.FromHexString('#3CACAE')}
             clicked={box4clicked}
-            onClick={handleBox4Click}
-          />
+           
+          /> */}
         </EngineSceneWithLightCamera>
       </Box>
     </Container>
