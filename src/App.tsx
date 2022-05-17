@@ -9,7 +9,7 @@ import { ModelSkaterGuy } from './BabyLonLib/ModelSkaterGuy';
 import * as socket from 'socket.io-client';
 import { useScene } from 'react-babylonjs';
 export const io = socket.connect('http://localhost:5020');
-const KEY = '1';
+export const KEY = '1';
 
 export default function App() {
   const [clicked, setClicked] = React.useState(false);

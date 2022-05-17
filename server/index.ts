@@ -35,7 +35,7 @@ io.on('connect', (ioSocket) => {
     // save message
     saveMessage(message);
     // to everybody in the room including myself
-    ioSocket.nsp.to(message.key).emit('message', message);
+    ioSocket.broadcast.to(message.key).emit('message', message);
   });
 });
 
@@ -66,5 +66,6 @@ type Message = {
     f?: boolean;
     h?: boolean;
   };
-  keydown?: boolean;
+  keydown?: string[];
+  animating?: boolean;
 };

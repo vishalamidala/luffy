@@ -1,6 +1,7 @@
 import { Vector3, ActionManager, ExecuteCodeAction } from '@babylonjs/core';
 import React from 'react';
 import { TaskType, useAssetManager, useScene } from 'react-babylonjs';
+import { KEY, io } from '../App';
 
 const baseUrl = 'models/';
 const modelAssetTasks = [
@@ -43,17 +44,44 @@ export const ModelSkaterGuy = ({
         scene.actionManager.registerAction(
           new ExecuteCodeAction(ActionManager.OnKeyDownTrigger, (evt) => {
             inputMap[evt.sourceEvent.key] = evt.sourceEvent.type === 'keydown';
+            io.emit('message', {
+              inputMap,
+              key: KEY,
+              position: skater.position,
+            });
           })
         );
         scene.actionManager.registerAction(
           new ExecuteCodeAction(ActionManager.OnKeyUpTrigger, (evt) => {
             inputMap[evt.sourceEvent.key] = evt.sourceEvent.type === 'keydown';
+            io.emit('message', {
+              inputMap,
+              key: KEY,
+              position: skater.position,
+            });
           })
         );
         const walkAnim = scene.getAnimationGroupByName('running');
         const walkBackAnim = scene.getAnimationGroupByName('jump');
         const idleAnim = scene.getAnimationGroupByName('idle');
-
+        io.on(
+          'message',
+          (message: {
+            text: string;
+            inputMap: any;
+            key: string;
+            keydown: string[];
+            position: Vector3;
+            animating: boolean;
+          }) => {
+            skater.position = new Vector3(
+              message.position._x,
+              message.position._y,
+              message.position._z
+            );
+            inputMap = message.inputMap;
+          }
+        );
         //Rendering loop (executed for everyframe)
         scene.onBeforeRenderObservable.add(() => {
           let keydown: string[] = [];
@@ -76,6 +104,7 @@ export const ModelSkaterGuy = ({
             skater.rotate(Vector3.Up(), skaterRotationSpeed);
             keydown.push('right');
           }
+
           const animations: any = {
             walk: () => {
               walkAnim?.start(true, 1.0, walkAnim.from, walkAnim.to, false);
@@ -104,18 +133,12 @@ export const ModelSkaterGuy = ({
           }
 
           if (keydown.length === 0) {
-            walkAnim?.stop();
-            walkBackAnim?.stop();
-
             if (animating) {
-              //Default animation is idle when no key is down
               idleAnim?.start(true, 1.0, idleAnim.from, idleAnim.to, false);
-
-              //Stop all animations besides Idle Anim when no key is down
-
-              //Ensure animation are played only once per rendering loop
               animating = false;
             }
+            walkAnim?.stop();
+            walkBackAnim?.stop();
           }
         });
       }
