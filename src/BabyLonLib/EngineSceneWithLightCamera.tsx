@@ -68,7 +68,10 @@ export const EngineSceneWithLightCamera = (props: { children: any }) => {
             <texture name="grass" url={wood} />
           </standardMaterial>
         </ground>
-        <Skybox rootUrl="assets/textures/milkyway" name="skybox"></Skybox>
+        <Skybox
+          rootUrl="assets/textures/TropicalSunnyDay"
+          name="skybox"
+        ></Skybox>
         <environmentHelper
           options={{
             enableGroundShadow: true /* true by default */,

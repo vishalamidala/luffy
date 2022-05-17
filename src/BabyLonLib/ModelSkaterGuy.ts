@@ -37,7 +37,7 @@ export const ModelSkaterGuy = ({
         let animating = true;
 
         const skaterSpeed = 0.04;
-        const skaterSpeedBackwards = 0.01;
+        const skaterSpeedJump = 0.02;
         const skaterRotationSpeed = 0.1;
         scene.actionManager = new ActionManager(scene);
         scene.actionManager.registerAction(
@@ -53,6 +53,7 @@ export const ModelSkaterGuy = ({
         const walkAnim = scene.getAnimationGroupByName('running');
         const walkBackAnim = scene.getAnimationGroupByName('jump');
         const idleAnim = scene.getAnimationGroupByName('idle');
+
         //Rendering loop (executed for everyframe)
         scene.onBeforeRenderObservable.add(() => {
           let keydown: string[] = [];
@@ -61,9 +62,9 @@ export const ModelSkaterGuy = ({
             skater.moveWithCollisions(skater.forward.scaleInPlace(skaterSpeed));
             keydown.push('walk');
           }
-          if (inputMap['s']) {
+          if (inputMap[' ']) {
             skater.moveWithCollisions(
-              skater.forward.scaleInPlace(-skaterSpeedBackwards)
+              skater.forward.scaleInPlace(skaterSpeedJump)
             );
             keydown.push('jump');
           }
@@ -93,15 +94,15 @@ export const ModelSkaterGuy = ({
           };
           // Manage animations to be played
 
-          if (!animating) {
+          if (!animating && keydown.length > 0) {
             keydown.map((value) => {
               return animations[value]();
             });
+            if (!keydown.includes('jump')) {
+              walkBackAnim?.stop();
+            }
           }
 
-          if (!keydown.includes('jump')) {
-            walkBackAnim?.stop();
-          }
           if (keydown.length === 0) {
             walkAnim?.stop();
             walkBackAnim?.stop();
